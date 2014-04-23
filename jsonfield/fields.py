@@ -87,7 +87,8 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
         """Convert JSON object to a string"""
         if self.null and value is None:
             return None
-        return json.dumps(value, **self.dump_kwargs)
+
+        return json.dumps(value, **self.dump_kwargs).strip('"')
 
     def value_to_string(self, obj):
         value = self._get_val_from_obj(obj)
@@ -100,7 +101,7 @@ class JSONFieldBase(six.with_metaclass(SubfieldBase, models.Field)):
         return self.dumps_for_display(value)
 
     def dumps_for_display(self, value):
-        return json.dumps(value, **self.dump_kwargs)
+        return json.dumps(value, **self.dump_kwargs).strip('"')
 
     def formfield(self, **kwargs):
 
@@ -149,7 +150,7 @@ class JSONField(JSONFieldBase, models.TextField):
     def dumps_for_display(self, value):
         kwargs = { "indent": 2 }
         kwargs.update(self.dump_kwargs)
-        return json.dumps(value, **kwargs)
+        return json.dumps(value, **kwargs).strip('"')
 
 
 class JSONCharField(JSONFieldBase, models.CharField):
